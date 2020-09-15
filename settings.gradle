@@ -1,2 +1,2 @@
 include ':app'
-rootProject.name = "Login model app"
+rootProject.name = "Book searcher"
