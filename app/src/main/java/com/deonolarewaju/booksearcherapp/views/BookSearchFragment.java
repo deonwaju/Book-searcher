@@ -1,5 +1,6 @@
 package com.deonolarewaju.booksearcherapp.views;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ public class BookSearchFragment extends Fragment {
 
     private BookSearchViewModel bookSearchViewModel;
     private BookSearchAdapter bookSearchAdapter;
+    Context context;
 
     private TextInputEditText keyword;
     private TextInputEditText author;
@@ -33,7 +35,7 @@ public class BookSearchFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        bookSearchAdapter = new BookSearchAdapter();
+        bookSearchAdapter = new BookSearchAdapter(context);
         bookSearchViewModel = ViewModelProviders.of(this).get(BookSearchViewModel.class);
         bookSearchViewModel.init();
         bookSearchViewModel.getVolumesResponseLiveData().observe(this, new Observer<VolumesResponse>() {
@@ -76,4 +78,5 @@ public class BookSearchFragment extends Fragment {
 
         bookSearchViewModel.searchVolumes(searchKeyword, authorName);
     }
+
 }

@@ -1,5 +1,7 @@
 package com.deonolarewaju.booksearcherapp.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.deonolarewaju.booksearcherapp.R;
 import com.deonolarewaju.booksearcherapp.models.Volume;
+import com.deonolarewaju.booksearcherapp.views.BookDetailsActivity;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,7 +23,12 @@ import java.util.List;
 
 public class BookSearchAdapter extends RecyclerView.Adapter<BookSearchAdapter.BookSearchHolder> {
 
+    Context context;
     private List<Volume> results = new ArrayList<>();
+
+    public BookSearchAdapter(Context context) {
+        this.context = context;
+    }
 
     @NonNull
     @Override
@@ -49,8 +57,26 @@ public class BookSearchAdapter extends RecyclerView.Adapter<BookSearchAdapter.Bo
         if (volume.getVolumeInfo().getAuthors() != null) {
             String joinedAuthors = StringUtils.join(volume.getVolumeInfo().getAuthors(), ", ");
             holder.authorsTextView.setText(joinedAuthors);
-
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (volume != null) {
+
+                    String joinedAuthors = StringUtils.join(volume.getVolumeInfo().getAuthors(), ", ");
+                    String photo = volume.getVolumeInfo().getImageLinks().getThumbnail()
+                            .replace("http://", "https://");
+
+                    Intent intent = new Intent(context, BookDetailsActivity.class);
+                    intent.putExtra("photoUrl", photo);
+                    intent.putExtra("title", volume.getVolumeInfo().getTitle());
+                    intent.putExtra("description", volume.getVolumeInfo().getDescription());
+                    intent.putExtra("author", joinedAuthors);
+                    context.startActivity(intent);
+                }
+            }
+        });
 
     }
 
@@ -74,11 +100,11 @@ public class BookSearchAdapter extends RecyclerView.Adapter<BookSearchAdapter.Bo
         public BookSearchHolder(@NonNull View itemView) {
             super(itemView);
 
-
             titleTextView = itemView.findViewById(R.id.book_item_title);
             authorsTextView = itemView.findViewById(R.id.book_item_authors);
             publishedDateTextView = itemView.findViewById(R.id.book_item_publishedDate);
             smallThumbnailImageView = itemView.findViewById(R.id.book_item_smallThumbnail);
+
 
         }
     }
